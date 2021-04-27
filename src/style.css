@@ -44,7 +44,7 @@
 .quotebox {
   background-color: whitesmoke;
   width: 550px;
-
+  text-align: center;
   border-radius: 3px;
   margin: auto;
   display: flex;
@@ -67,6 +67,7 @@
   color: darkseagreen;
   font-size: 30px;
   font-family: "Antonio", sans-serif;
+  text-align: center;
 }
 
 .author {

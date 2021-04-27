@@ -7,6 +7,9 @@ import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 
 const element = <FontAwesomeIcon icon={faTwitter} />;
 
+let quoteDB =
+  "https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json";
+
 const App = () => {
   return (
     <div>
@@ -14,60 +17,6 @@ const App = () => {
     </div>
   );
 };
-
-const quotes = [
-  {
-    quote: "If you want to lift yourself up, lift up someone else.",
-    author: "- Booker T. Washington",
-  },
-  {
-    quote: "When I let go of what I am, I become what I might be.",
-    author: "- Lao Tzu",
-  },
-  {
-    quote:
-      "You may be disappointed if you fail, but you are doomed if you don’t try.",
-    author: "- Beverly Sills",
-  },
-  {
-    quote:
-      "If you do what you’ve always done, you’ll get what you’ve always gotten.",
-    author: "- Tony Robbins",
-  },
-  {
-    quote:
-      "You take your life in your own hands, and what happens? A terrible thing, no one to blame.",
-    author: "- Erica Jong",
-  },
-  {
-    quote:
-      "Every child is an artist. The problem is how to remain an artist once he grows up.",
-    author: "- Pablo Picasso",
-  },
-  {
-    quote: "Start where you are. Use what you have. Do what you can.",
-    author: "- Arthur Ashe",
-  },
-  {
-    quote: "Everything you’ve ever wanted is on the other side of fear.",
-    author: "- George Addair",
-  },
-  {
-    quote:
-      "Life is not measured by the number of breaths we take, but by the moments that take our breath away.",
-    author: "- Maya Angelou",
-  },
-  {
-    quote:
-      "The most difficult thing is the decision to act, the rest is merely tenacity.",
-    author: "- Amelia Earhart",
-  },
-  {
-    quote:
-      "I’ve missed more than 9000 shots in my career. I’ve lost almost 300 games. 26 times I’ve been trusted to take the game winning shot and missed. I’ve failed over and over and over again in my life. And that is why I succeed.",
-    author: "- Michael Jordan",
-  },
-];
 
 const Container = () => {
   return (
@@ -78,48 +27,40 @@ const Container = () => {
 };
 
 const Quotebox = () => {
-  const [quote, setQuote] = useState("default");
+  const [quote, setQuote] = useState(
+    "Start where you are. Use what you have.  Do what you can"
+  );
+  const [author, setAuthor] = useState("Arthur Ashe");
+
+  const [randomNumber, setrandomNumber] = useState(0);
+
+  const [quotesArray, setquotesArray] = useState("default");
+
+  const fetchQuotes = async (url) => {
+    const response = await fetch(url);
+    const parsedJSON = await response.json();
+    setquotesArray(parsedJSON.quotes);
+  };
 
   const randomQuote = () => {
-    const randomInteger = Math.floor(Math.random() * quotes.length);
-
-    if (randomInteger === 0) {
-      setQuote(quotes[0]);
-    } else if (randomInteger === 1) {
-      setQuote(quotes[1]);
-    } else if (randomInteger === 2) {
-      setQuote(quotes[2]);
-    } else if (randomInteger === 3) {
-      setQuote(quotes[3]);
-    } else if (randomInteger === 4) {
-      setQuote(quotes[4]);
-    } else if (randomInteger === 5) {
-      setQuote(quotes[5]);
-    } else if (randomInteger === 6) {
-      setQuote(quotes[6]);
-    } else if (randomInteger === 7) {
-      setQuote(quotes[7]);
-    } else if (randomInteger === 8) {
-      setQuote(quotes[8]);
-    } else if (randomInteger === 9) {
-      setQuote(quotes[9]);
-    } else if (randomInteger === 10) {
-      setQuote(quotes[10]);
-    }
+    const randomInteger = Math.floor(Math.random() * quotesArray.length);
+    setrandomNumber(randomInteger);
+    setQuote(quotesArray[randomInteger].quote);
+    setAuthor(quotesArray[randomInteger].author);
   };
 
   useEffect(() => {
-    randomQuote();
-  });
+    fetchQuotes(quoteDB);
+  }, [quoteDB]);
 
   return (
     <div className="quotebox" id="quote-box">
       <div className="quote-section">
         <p className="quote" id="text">
-          {quote.quote}
+          {quote}
         </p>
         <p className="author" id="author">
-          {quote.author}
+          {author}
         </p>
       </div>
 
@@ -130,7 +71,7 @@ const Quotebox = () => {
         <div className="button">
           <a
             href={encodeURI(
-              `http://www.twitter.com/intent/tweet?text=${quote.quote} - ${quote.author}`
+              `http://www.twitter.com/intent/tweet?text=${quote} - ${author}`
             )}
             id="tweet-quote"
             target="_blank"
